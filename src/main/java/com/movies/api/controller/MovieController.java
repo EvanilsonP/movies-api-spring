@@ -50,4 +50,11 @@ public class MovieController {
         movieRepository.save(movie);
         return new ResponseEntity<>(movie, HttpStatus.OK);
     }
+
+    // Delete a movie
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMovie(@PathVariable Integer id) {
+        movieRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
