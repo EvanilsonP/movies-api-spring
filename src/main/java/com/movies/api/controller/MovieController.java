@@ -42,4 +42,12 @@ public class MovieController {
         List<Movie> movies = movieRepository.findAll();
         return new ResponseEntity<>(movies, HttpStatus.OK);
     }
+
+    // Update movie
+    @PutMapping("/{id}")
+    public ResponseEntity<Movie> updateMovie(@PathVariable Integer id, @RequestBody Movie movie) {
+        movie.setId(id);
+        movieRepository.save(movie);
+        return new ResponseEntity<>(movie, HttpStatus.OK);
+    }
 }
