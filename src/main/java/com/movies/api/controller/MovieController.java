@@ -3,10 +3,12 @@ package com.movies.api.controller;
 import com.movies.api.entity.Movie;
 import com.movies.api.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +21,14 @@ public class MovieController {
 
     // Create and save movie to the database
     @PostMapping("/create")
-    public ResponseEntity<Movie> createMovie(@RequestBody Movie movie) {
-        Movie newMovie = movieRepository.save(movie);
-        return new ResponseEntity<>(newMovie, HttpStatus.CREATED);
+    public ResponseEntity<Object> createMovie(@RequestBody Movie movie) {
+       try {
+           Movie newMovie = movieRepository.save(movie);
+           return new ResponseEntity<>(newMovie, HttpStatus.CREATED);
+       } catch (DataIntegrityViolationException e) {
+            String message = "Movie with title '" + movie.getTitle() + "' already exists";
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Collections.singletonMap("message", message));
+       }
     }
 
     // Get movie by its id
